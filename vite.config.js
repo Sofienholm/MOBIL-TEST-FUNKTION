@@ -8,5 +8,8 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    // Tillad at åbne dev-serveren gennem en tunnel (fx localtunnel/*.loca.lt,
+    // ngrok, cloudflared) så man kan teste kamera/WebXR på mobil via HTTPS.
+    allowedHosts: true,
   },
 })
