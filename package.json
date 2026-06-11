@@ -1,0 +1,21 @@
+{
+  "name": "mobil-test-funktion",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "WebAR-prototype: sidequest 'En mystisk regning??' til Industrimuseets Arbejderboliger 1955",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.160.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2"
+  }
+}
