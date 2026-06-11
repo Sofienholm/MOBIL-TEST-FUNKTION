@@ -13,7 +13,7 @@
 //    - som hovedbillede i quest-visningen (QuestOverlay)
 // ──────────────────────────────────────────────────────────────────────────
 
-import receiptSrc from "./kvitteringsbilledet.svg";
+import receiptSrc from "./receipt.svg";
 // import receiptSrc from './receipt.png'  // ← aktivér denne linje for dit eget billede
 
 export default receiptSrc;
