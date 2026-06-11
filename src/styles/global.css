@@ -224,6 +224,35 @@ body {
 /* ============================================================================
    OVERFLADE-SCAN + KRØLLET PAPIR (fallback)
    ========================================================================== */
+
+/* Anker der flyttes af gyroskopet, så indholdet "bliver liggende" i rummet. */
+.world-anchor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Knap til at give iOS adgang til bevægelsessensoren. */
+.motion-pill {
+  pointer-events: auto;
+  position: absolute;
+  left: 50%;
+  bottom: max(26px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  animation: hintPulse 1.8s ease-in-out infinite;
+}
 .scan-reticle {
   position: absolute;
   left: 50%;
@@ -259,6 +288,7 @@ body {
 
 /* Krøllet papir, placeret lavt i billedet så det "ligger" på en flade. */
 .clue-paper {
+  pointer-events: auto;
   position: absolute;
   left: 50%;
   top: 74%;
