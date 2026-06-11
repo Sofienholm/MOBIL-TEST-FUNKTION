@@ -14,6 +14,7 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
   const streamRef = useRef(null)
 
   const [camStatus, setCamStatus] = useState('starting') // starting | live | error
+  const [camError, setCamError] = useState('')
   const [placeStage, setPlaceStage] = useState('scanning') // scanning | placed
   const [unfolding, setUnfolding] = useState(false)
   const [xrActive, setXrActive] = useState(false)
@@ -24,6 +25,15 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
     let cancelled = false
 
     async function startCamera() {
+      // Kameraet kræver en sikker kontekst (HTTPS eller localhost).
+      if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        setCamError(
+          'Kameraet kræver en sikker forbindelse (https://). Åbn siden via ' +
+            'localhost eller et https-link — fx en tunnel som "npx localtunnel --port 5173".',
+        )
+        setCamStatus('error')
+        return
+      }
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: { ideal: 'environment' } },
@@ -39,7 +49,15 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
           await videoRef.current.play().catch(() => {})
         }
         setCamStatus('live')
-      } catch {
+      } catch (err) {
+        // Giv en forståelig forklaring i stedet for en mørk skærm.
+        if (err?.name === 'NotAllowedError') {
+          setCamError('Kameraadgang blev afvist. Tillad kamera i browseren og genindlæs siden.')
+        } else if (err?.name === 'NotFoundError') {
+          setCamError('Der blev ikke fundet et kamera på enheden.')
+        } else {
+          setCamError('Kameraet kunne ikke startes. Tjek tilladelser og at siden åbnes via https://.')
+        }
         setCamStatus('error')
       }
     }
@@ -95,7 +113,12 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
       />
 
       {camStatus === 'error' && (
-        <div className="camera-fallback-bg" aria-hidden="true" />
+        <div className="camera-fallback-bg">
+          <div className="camera-error">
+            <span className="camera-error__icon" aria-hidden="true">📷</span>
+            <p className="camera-error__msg">{camError}</p>
+          </div>
+        </div>
       )}
 
       {/* Krøllet papir + unfold-illusion */}

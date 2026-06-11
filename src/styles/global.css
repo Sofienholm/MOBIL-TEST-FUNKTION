@@ -70,8 +70,36 @@ body {
 .camera-fallback-bg {
   position: absolute;
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
   background:
     radial-gradient(120% 80% at 50% 20%, #3a2c20 0%, #241a12 60%, #140d08 100%);
+}
+
+.camera-error {
+  max-width: 320px;
+  text-align: center;
+  background: rgba(21, 41, 63, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 22px 20px;
+  margin-top: 120px;
+}
+
+.camera-error__icon {
+  font-size: 34px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.camera-error__msg {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 /* ============================================================================
