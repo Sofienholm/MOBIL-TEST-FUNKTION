@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import ARScene from './ARScene.jsx'
+import useDeviceAnchor from '../hooks/useDeviceAnchor.js'
 import receiptSrc from '../assets/receipt.js'
 import crumpledSrc from '../assets/crumpled-paper.svg'
 
@@ -19,6 +20,11 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
   const [placeStage, setPlaceStage] = useState('scanning') // scanning | placed
   const [unfolding, setUnfolding] = useState(false)
   const [xrActive, setXrActive] = useState(false)
+
+  // Gyroskop-anker: papiret "bliver liggende" når man drejer/vipper telefonen.
+  const { anchorRef, needsPermission, enableMotion } = useDeviceAnchor(
+    camStatus === 'live' && !xrActive,
+  )
 
   // Start kameraet så hurtigt browseren tillader det (ingen startskærm).
   useEffect(() => {
@@ -122,32 +128,35 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
         </div>
       )}
 
-      {/* Krøllet papir + unfold-illusion */}
-      {placeStage === 'scanning' && !unfolding && (
-        <div className="scan-reticle" aria-hidden="true">
-          <span className="scan-ring" />
-          <span className="scan-label">find en flad overflade…</span>
-        </div>
-      )}
+      {/* Anker der følger telefonens bevægelse (pseudo-AR). */}
+      <div className="world-anchor" ref={anchorRef}>
+        {/* Krøllet papir + unfold-illusion */}
+        {placeStage === 'scanning' && !unfolding && (
+          <div className="scan-reticle" aria-hidden="true">
+            <span className="scan-ring" />
+            <span className="scan-label">find en flad overflade…</span>
+          </div>
+        )}
 
-      {placeStage === 'placed' && (
-        <button
-          type="button"
-          className={`clue-paper ${unfolding ? 'is-unfolding' : ''}`}
-          onClick={handlePaperTap}
-          aria-label="Tryk på det krøllede papir"
-        >
-          <img src={crumpledSrc} alt="" className="clue-paper__img" />
-          <span className="clue-paper__hint">tryk på papiret</span>
-        </button>
-      )}
+        {placeStage === 'placed' && (
+          <button
+            type="button"
+            className={`clue-paper ${unfolding ? 'is-unfolding' : ''}`}
+            onClick={handlePaperTap}
+            aria-label="Tryk på det krøllede papir"
+          >
+            <img src={crumpledSrc} alt="" className="clue-paper__img" />
+            <span className="clue-paper__hint">tryk på papiret</span>
+          </button>
+        )}
 
-      {/* Den udfoldede regning der flyver mod kameraet */}
-      {unfolding && (
-        <div className="unfold-receipt" aria-hidden="true">
-          <img src={receiptSrc} alt="" className="unfold-receipt__img" />
-        </div>
-      )}
+        {/* Den udfoldede regning der flyver mod kameraet */}
+        {unfolding && (
+          <div className="unfold-receipt" aria-hidden="true">
+            <img src={receiptSrc} alt="" className="unfold-receipt__img" />
+          </div>
+        )}
+      </div>
 
       {/* ── Fast UI-overlay ───────────────────────────────────────────── */}
       <div className="ui-overlay">
@@ -171,6 +180,13 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
             onClick={() => setXrActive(true)}
           >
             Start ægte AR ▸
+          </button>
+        )}
+
+        {/* iOS kræver et tryk for at give adgang til bevægelsessensoren. */}
+        {needsPermission && !unfolding && (
+          <button type="button" className="motion-pill" onClick={enableMotion}>
+            Aktivér bevægelse
           </button>
         )}
       </div>
