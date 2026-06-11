@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ARScene from './ARScene.jsx'
 import receiptSrc from '../assets/receipt.js'
+import crumpledSrc from '../assets/crumpled-paper.svg'
 
 const CLUE_TEXT = 'BEVÆG DIG FREM OG SE OM DU KAN FINDE EN LEDETRÅD'
 
@@ -125,7 +126,7 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
       {placeStage === 'scanning' && !unfolding && (
         <div className="scan-reticle" aria-hidden="true">
           <span className="scan-ring" />
-          <span className="scan-label">scanner overflade…</span>
+          <span className="scan-label">find en flad overflade…</span>
         </div>
       )}
 
@@ -136,9 +137,8 @@ export default function CameraExperience({ active, xrSupported, found, onClueFou
           onClick={handlePaperTap}
           aria-label="Tryk på det krøllede papir"
         >
-          <span className="crumple crumple--1" />
-          <span className="crumple crumple--2" />
-          <span className="crumple--shadow" />
+          <img src={crumpledSrc} alt="" className="clue-paper__img" />
+          <span className="clue-paper__hint">tryk på papiret</span>
         </button>
       )}
 
